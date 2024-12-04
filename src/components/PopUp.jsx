@@ -1,7 +1,7 @@
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 export const PopupWin = ({ isOpen, onClose, solution }) => {
   //return <div className={`pop-up-modal ${isOpen ? '' : 'hidden'}`}>Congrats You Did It</div>
 
@@ -17,7 +17,7 @@ export const PopupWin = ({ isOpen, onClose, solution }) => {
     p: 4,
   };
 
-  content = (
+  const content = (
     <div className='modal'>
       <Modal open={isOpen}>
         <Box sx={style}>
@@ -46,7 +46,7 @@ export const PopupLose = ({ isOpen, onClose, solution }) => {
     p: 4,
   };
 
-  content = (
+  const content = (
     <div className='modal'>
       <Modal open={isOpen}>
         <Box sx={style}>

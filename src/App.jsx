@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Board } from './components/Board';
 import { GameContext } from './context/Context';
 import { Keyboard } from './components/Keyboard';
 import { PopupWin, PopupLose } from './components/PopUp';
-import { generateWord } from './lib/data';
+// import { generateWord } from './lib/data';
 import { generateCharacter } from './lib/greyData';
-import {CharacterAvatar} from './components/CharacterAvatar'
+// import {CharacterAvatar} from './components/CharacterAvatar'
 
 export function App(props) {
   const [character, setCharacter] = useState(generateCharacter());
@@ -18,7 +18,7 @@ export function App(props) {
     Array(5).fill(Array.from(character.name.replace(' ', '')).fill(0))
   );
 
-  const [solution, setSolution] = useState(generateWord());
+ 
 
   const [attempt, setAttempt] = useState(0);
 
@@ -94,6 +94,7 @@ export function App(props) {
   };
 
   const onKeyPress = ({ key }) => {
+    
     if (key.toLowerCase() === 'enter') {
       onEnter();
     } else if (
@@ -102,9 +103,10 @@ export function App(props) {
     ) {
       onDelete();
     } else {
+      console.log(letterPos,character.name.replace(' ', '').length)
       if (
         letterPos > character.name.replace(' ', '').length ||
-        '1234567890 '.includes(key)
+        '1234567890 '.includes(key) || key.toLowerCase() === 'alt' || key.toLowerCase() === 'shift' || key.toLowerCase() === 'ctrl'
       )
         return;
       const newBoard = board.map((_, index) =>
@@ -129,11 +131,89 @@ export function App(props) {
       Array(5).fill(Array.from(character.name.replace(' ', '')).fill(0))
     );
   };
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyPress);
 
-    return () => document.removeEventListener('keydown', onKeyPress);
-  }, [onKeyPress]);
+  
+  const handleCheckSolution = useCallback((guess) => {
+    const formattedSolution = character.name.replace(' ','').toUpperCase()
+
+    const colorMap = guess.map((letter, index) => {
+      if (letter === formattedSolution[index]) {
+        return 2;
+      } else if (formattedSolution.includes(letter)) {
+        return 1;
+      } else {
+        return 3;
+      }
+    });
+
+    const newBoardStatus = boardStatus.map((row, attemptIndex) =>
+      attempt === attemptIndex ? colorMap : row
+    );
+    setBoardStatus(newBoardStatus);
+    if (guess.join('') === formattedSolution) {
+      console.log('You win');
+      setGameIsWon(true);
+    }
+  },[attempt,boardStatus,character])
+
+  const handleDelete = useCallback(()=> {
+    const newBoard = board.map((_, index) =>
+      index === attempt ? _.map((el, i) => (i === letterPos - 1 ? '' : el)) : _
+    );
+
+    setBoard(newBoard);
+    if (letterPos === 0) return;
+    setLetterPos(n => n - 1);
+  },[attempt,board,letterPos])
+
+  const handleEnter = useCallback(()=> {
+    console.log(letterPos,character.name.replace(' ', '').length)
+    if (letterPos !== character.name.replace(' ', '').length) {
+      console.log('Need Full answer');
+      return;
+    }
+
+    const guess = board.filter((_, index) => index === attempt)[0];
+
+    handleCheckSolution(guess);
+
+    setLetterPos(0);
+    setAttempt(n => n + 1);
+  },[attempt,board,character,handleCheckSolution,letterPos])
+
+
+
+  const handleKeyPress = useCallback(({key})=> {
+    console.log(key)
+    if (key.toLowerCase() === 'enter') {
+      handleEnter();
+    } else if (
+      key.toLowerCase() === 'backspace' ||
+      key.toLowerCase() === 'delete'
+    ) {
+      handleDelete();
+    } else {
+      console.log(letterPos,character.name.replace(' ','').length)
+      if (
+        letterPos === character.name.replace(' ', '').length ||
+        '1234567890 '.includes(key) || key.toLowerCase() === 'alt' || key.toLowerCase() === 'shift' || key.toLowerCase() === 'ctrl'
+      )
+        return;
+      const newBoard = board.map((_, index) =>
+        index === attempt ? _.map((el, i) => (i === letterPos ? key.toUpperCase() : el)) : _
+      );
+
+      setLetterPos(n => n + 1);
+      setBoard(newBoard);
+
+  }},[attempt,board,character,letterPos, handleDelete,handleEnter])
+
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
 
   return (
     <div className='App'>

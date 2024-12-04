@@ -1,4 +1,4 @@
-words = [
+const words = [
   'drama',
   'bench',
   'chord',

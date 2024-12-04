@@ -2,7 +2,7 @@ import { GameContext } from '../context/Context';
 import { useContext } from 'react';
 
 export const Key = ({ value, colorMapCode =0 }) => {
-  const { onKeyPress, onLetterClick } = useContext(GameContext);
+  const { onKeyPress } = useContext(GameContext);
 
   return (
     <div

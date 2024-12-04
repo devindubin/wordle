@@ -3,7 +3,7 @@ import { GameContext } from '../context/Context';
 import { Row } from './Row';
 
 export const Board = () => {
-  const { board, setBoard } = useContext(GameContext);
+  const { board } = useContext(GameContext);
   
 
   const content = (
