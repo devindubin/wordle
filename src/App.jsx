@@ -217,7 +217,7 @@ export function App(props) {
 
   return (
     <div className='App'>
-    <nav><h1>Turdle</h1></nav>
+    <nav><h1>Wordle</h1></nav>
       <GameContext.Provider
         value={{
           board,
