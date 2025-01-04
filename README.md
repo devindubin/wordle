@@ -2,6 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Next Steps
+
+- Clean up data set
+- Create Hint Section
+- create obvious space for full name
+- create greyed spots for punctuation
+
 ## Available Scripts
 
 In the project directory, you can run:

@@ -4,7 +4,7 @@ import { GameContext } from './context/Context';
 import { Keyboard } from './components/Keyboard';
 import { PopupWin, PopupLose } from './components/PopUp';
 // import { generateWord } from './lib/data';
-import { generateCharacter } from './lib/greyData';
+import { generateCharacter, dataSourceCount } from './lib/greyData';
 // import {CharacterAvatar} from './components/CharacterAvatar'
 
 export function App(props) {
@@ -217,7 +217,7 @@ export function App(props) {
 
   return (
     <div className='App'>
-    <nav><h1>Wordle</h1></nav>
+    <nav><h1>Wordle - Currently {dataSourceCount} options!</h1></nav>
       <GameContext.Provider
         value={{
           board,
